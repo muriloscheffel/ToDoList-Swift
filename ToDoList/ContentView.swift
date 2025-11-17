@@ -9,11 +9,27 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        VStack(spacing: 32) {
+            VStack(spacing: 16) {
+                Image("EmptyState")
+                    .imageScale(.large)
+                VStack(spacing: 8){
+                    Text("No tasks yet!")
+                        .font(.system(size: 17, weight: .semibold))
+                    Text("Add a new task and it will show up here.")
+                        .font(.system(size: 17))
+                        .foregroundStyle(Color.secondary)
+                }
+            }
+            Button {
+                print("Button tapped")
+            } label: {
+                Text("Add New Task")
+                    .font(.system(size: 17, weight: .semibold))
+                    .padding(.vertical)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding()
     }
