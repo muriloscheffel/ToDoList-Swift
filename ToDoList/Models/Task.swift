@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct Task {
+    var name: String
+    var details: String
+    var category: TaskCategory
+    var isCompleted: Bool
+}
