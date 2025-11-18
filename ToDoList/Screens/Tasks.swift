@@ -9,15 +9,20 @@ import SwiftUI
 
 struct Tasks: View {
     
+    @State
     var tasks: [Task] = [
         Task(name: "Tomar café da manhã", details: "no RU", category: .groceries, isCompleted: false),
+        Task(name: "Tomar café da manhã", details: "no RU", category: .groceries, isCompleted: false),
         Task(name: "Ir pra academia", details: "no RU", category: .fitness, isCompleted: false),
+        Task(name: "Ir pra academia", details: "no RU", category: .fitness, isCompleted: false),
+        Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
+        Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
         Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
         Task(name: "Estudar pra prova", details: "em casa", category: .education, isCompleted: false)
     ]
     
-    var groupedTasks: [TaskCategory: [Task]] {
-        Dictionary(grouping: tasks, by: { $0.category })
+    var groupedTasks: [TaskCategory: [Binding<Task>]] {
+        Dictionary(grouping: $tasks, by: { $0.category.wrappedValue })
     }
     
     var sortedCategories: [TaskCategory] {

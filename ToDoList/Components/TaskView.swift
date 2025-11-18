@@ -9,12 +9,12 @@ import SwiftUI
 
 struct TaskView: View {
     
-    var task: Task
+    @Binding var task: Task
     
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
             Button {
-//                task.isCompleted.toggle()
+                task.isCompleted.toggle()
             } label: {
                 Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "checkmark.circle")
                     .foregroundStyle(task.isCompleted ? .accent : .gray3)
@@ -30,5 +30,5 @@ struct TaskView: View {
 }
 
 #Preview {
-    TaskView(task: Task(name: "Almoçar", details: "no RU", category: .groceries, isCompleted: true))
+    TaskView(task: .constant(Task(name: "Almoçar", details: "no RU", category: .groceries, isCompleted: true)))
 }
