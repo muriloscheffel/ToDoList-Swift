@@ -11,9 +11,19 @@ struct Tasks: View {
     
     var tasks: [Task] = [
         Task(name: "Tomar café da manhã", details: "no RU", category: .groceries, isCompleted: false),
-        Task(name: "Almoçar", details: "no RU", category: .groceries, isCompleted: false),
-        Task(name: "Jantar", details: "em casa", category: .groceries, isCompleted: false)
+        Task(name: "Ir pra academia", details: "no RU", category: .fitness, isCompleted: false),
+        Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
+        Task(name: "Estudar pra prova", details: "em casa", category: .education, isCompleted: false)
     ]
+    
+    var groupedTasks: [TaskCategory: [Task]] {
+        Dictionary(grouping: tasks, by: { $0.category })
+    }
+    
+    var sortedCategories: [TaskCategory] {
+        groupedTasks.keys.sorted(by: { $0.rawValue < $1.rawValue })
+    }
+    
     
     var body: some View {
         
@@ -21,10 +31,23 @@ struct Tasks: View {
             EmptyStateView()
         } else {
             
-            List(tasks) { task in
-                TaskView(task: task)
+            List(sortedCategories) { category in
+                
+                // header
+                HeaderView(taskCategory: category)
                     .listRowInsets(EdgeInsets())
-            } .listStyle(.plain)
+                    .padding(.top, 20)
+                
+                if let categoryTasks = groupedTasks[category] {
+                    
+                    ForEach(categoryTasks) { task in
+                        TaskView(task: task)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(task.id == categoryTasks.last!.id ? .hidden : .visible, edges: .bottom)
+                    }
+                }
+            }
+            .listStyle(.plain)
         }
         
         
