@@ -9,15 +9,23 @@ import SwiftUI
 
 struct Tasks: View {
     
-    var tasks: [String] = [
-        "almoçar", "comprar comida", "comprar roupa"
+    var tasks: [Task] = [
+        Task(name: "Almoçar", details: "no RU", category: .groceries, isCompleted: false),
+        Task(name: "Jantar", details: "em casa", category: .groceries, isCompleted: false)
     ]
     
     var body: some View {
- 
-        List(tasks, id: \.self) { task in
-            Text(task)
+        
+        if tasks.isEmpty {
+            EmptyStateView()
+        } else {
+            
+            List(tasks) { task in
+                Text(task.name)
+            } .listStyle(.plain)
         }
+        
+        
         
     }
 }
