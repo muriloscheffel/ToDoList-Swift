@@ -16,7 +16,7 @@ struct TaskView: View {
             Button {
                 task.isCompleted.toggle()
             } label: {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "checkmark.circle")
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(task.isCompleted ? .accent : .gray3)
                     .frame(width: 22, height: 22)
             }
