@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct EmptyStateView: View {
+    
+    @Binding var addTask: Bool
+    
     var body: some View {
         VStack(spacing: 32) {
             VStack(spacing: 16) {
@@ -22,7 +25,7 @@ struct EmptyStateView: View {
                 }
             }
             Button {
-                print("Button tapped")
+                addTask = true
             } label: {
                 Text("Add New Task")
                     .font(.system(size: 17, weight: .semibold))
@@ -36,5 +39,5 @@ struct EmptyStateView: View {
 }
 
 #Preview {
-    EmptyStateView()
+    EmptyStateView(addTask: .constant(false))
 }
