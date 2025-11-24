@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TaskCategory: String, Identifiable {
+enum TaskCategory: String, CaseIterable, Identifiable {
     
     var id: String { rawValue }
     
@@ -27,7 +27,7 @@ enum TaskCategory: String, Identifiable {
         case .education:
             return "graduationcap.fill"
         case .fitness:
-            return "dumbell.fill"
+            return "dumbbell.fill"
         case .groceries:
             return "fork.knife"
         case .health:
