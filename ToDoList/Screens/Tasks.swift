@@ -6,24 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct Tasks: View {
     
-    @State var tasks: [Task] = [
-        Task(name: "Tomar café da manhã", details: "no RU", category: .groceries, isCompleted: false),
-        Task(name: "Tomar café da manhã", details: "no RU", category: .groceries, isCompleted: false),
-        Task(name: "Ir pra academia", details: "no RU", category: .fitness, isCompleted: false),
-        Task(name: "Ir pra academia", details: "no RU", category: .fitness, isCompleted: false),
-        Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
-        Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
-        Task(name: "Ir pra aula", details: "em casa", category: .education, isCompleted: false),
-        Task(name: "Estudar pra prova", details: "em casa", category: .education, isCompleted: false)
-    ]
-    
+    @Environment(\.modelContext) var modelContext
+    @Query var tasks: [Task]
     @State var addTask: Bool = false
     
-    var groupedTasks: [TaskCategory: [Binding<Task>]] {
-        Dictionary(grouping: $tasks, by: { $0.category.wrappedValue })
+    var groupedTasks: [TaskCategory: [Task]] {
+        Dictionary(grouping: tasks, by: { $0.category })
     }
     
     var sortedCategories: [TaskCategory] {
@@ -54,6 +46,12 @@ struct Tasks: View {
                                 TaskView(task: task)
                                     .listRowInsets(EdgeInsets())
                                     .listRowSeparator(task.id == categoryTasks.last!.id ? .hidden : .visible, edges: .bottom)
+                                    .swipeActions(edge: .trailing) {
+                                        Button("Delete", systemImage: "trash", role: .destructive) {
+                                            modelContext.delete(task)
+                                            try? modelContext.save()
+                                        }
+                                    }
                             }
                         }
                     }

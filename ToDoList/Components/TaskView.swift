@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskView: View {
     
-    @Binding var task: Task
+    var task: Task
     
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
@@ -30,5 +30,5 @@ struct TaskView: View {
 }
 
 #Preview {
-    TaskView(task: .constant(Task(name: "Almoçar", details: "no RU", category: .groceries, isCompleted: true)))
+    TaskView(task: Task(name: "Almoçar", details: "no RU", category: .groceries, isCompleted: true))
 }
