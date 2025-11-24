@@ -11,8 +11,12 @@ import SwiftData
 struct Tasks: View {
     
     @Environment(\.modelContext) var modelContext
+    
     @Query var tasks: [Task]
+    
     @State var addTask: Bool = false
+    @State var editTask: Task? = nil
+    
     
     var groupedTasks: [TaskCategory: [Task]] {
         Dictionary(grouping: tasks, by: { $0.category })
@@ -41,7 +45,12 @@ struct Tasks: View {
                     if let categoryTasks = groupedTasks[category] {
                         
                         ForEach(categoryTasks) { task in
-                            TaskView(task: task)
+                            Button {
+                                editTask = task
+                            }
+                            label: {
+                                TaskView(task: task)
+                            }
                                 .listRowInsets(EdgeInsets())
                                 .listRowSeparator(task.id == categoryTasks.last!.id ? .hidden : .visible, edges: .bottom)
                                 .swipeActions(edge: .trailing) {
@@ -57,8 +66,12 @@ struct Tasks: View {
                 .padding()
             }
         }
-        .sheet(isPresented: $addTask, content: {
-            AddTask()
+        .sheet(isPresented: $addTask, content: {  // adicionar tarefa
+            UpInsertTask()
+                .presentationDragIndicator(.visible)
+        })
+        .sheet(item: $editTask, content: { task in  // editar tarefa
+            UpInsertTask(task: task)
                 .presentationDragIndicator(.visible)
         })
         .toolbar {
