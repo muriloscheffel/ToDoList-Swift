@@ -11,8 +11,12 @@ import SwiftData
 struct Tasks: View {
     
     @Environment(\.modelContext) var modelContext
+    
     @Query var tasks: [Task]
+    
     @State var addTask: Bool = false
+    @State var editTask: Task? = nil
+    
     
     var groupedTasks: [TaskCategory: [Task]] {
         Dictionary(grouping: tasks, by: { $0.category })
@@ -25,61 +29,63 @@ struct Tasks: View {
     
     var body: some View {
         
-        NavigationStack {
-            
-            VStack {
-                if tasks.isEmpty {
-                    EmptyStateView(addTask: $addTask)
-                } else {
+        VStack {
+            if tasks.isEmpty {
+                EmptyStateView(addTask: $addTask)
+            } else {
+                
+                List(sortedCategories) { category in
                     
-                    List(sortedCategories) { category in
+                    // header
+                    HeaderView(taskCategory: category)
+                        .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden, edges: .top)
+                        .padding(.top, 20)
+                    
+                    if let categoryTasks = groupedTasks[category] {
                         
-                        // header
-                        HeaderView(taskCategory: category)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden, edges: .top)
-                            .padding(.top, 20)
-                        
-                        if let categoryTasks = groupedTasks[category] {
-                            
-                            ForEach(categoryTasks) { task in
-                                TaskView(task: task)
-                                    .listRowInsets(EdgeInsets())
-                                    .listRowSeparator(task.id == categoryTasks.last!.id ? .hidden : .visible, edges: .bottom)
-                                    .swipeActions(edge: .trailing) {
-                                        Button("Delete", systemImage: "trash", role: .destructive) {
-                                            modelContext.delete(task)
-                                            try? modelContext.save()
-                                        }
-                                    }
+                        ForEach(categoryTasks) { task in
+                            Button {
+                                editTask = task
                             }
+                            label: {
+                                TaskView(task: task)
+                            }
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(task.id == categoryTasks.last!.id ? .hidden : .visible, edges: .bottom)
+                                .swipeActions(edge: .trailing) {
+                                    Button("Delete", systemImage: "trash", role: .destructive) {
+                                        modelContext.delete(task)
+                                        try? modelContext.save()
+                                    }
+                                }
                         }
                     }
-                    .listStyle(.plain)
-                    .padding()
                 }
+                .listStyle(.plain)
+                .padding()
             }
-            
-            .sheet(isPresented: $addTask, content: {
-                AddTask()
-                    .presentationDragIndicator(.visible)
-            })
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add", systemImage: "plus") {
-                        addTask = true
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-            }
-            
         }
-        
-        
-        
+        .sheet(isPresented: $addTask, content: {  // adicionar tarefa
+            UpInsertTask()
+                .presentationDragIndicator(.visible)
+        })
+        .sheet(item: $editTask, content: { task in  // editar tarefa
+            UpInsertTask(task: task)
+                .presentationDragIndicator(.visible)
+        })
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Add", systemImage: "plus") {
+                    addTask = true
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .navigationTitle("Tasks")
     }
 }
 
 #Preview {
-    Tasks()
+    TabBar()
 }
